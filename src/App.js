@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, {
+  useEffect,
+  useState,
+} from "react";
 import {
   Route,
   Routes,
@@ -40,17 +43,23 @@ function App() {
 
   const [connected, setConnected] =
     useState(false);
-  console.log(
-    `🔌 connected: ${connected}`
-  );
-
   const [address, setAddress] =
     useState(null);
-  console.log(`🏦 address: ${address}`);
-
   const [isOwner, setIsOwner] =
     useState(false);
-  console.log(`🧐 isOwner: ${isOwner}`);
+
+  useEffect(() => {
+    // Debug logs
+    console.log(
+      `🔌 connected: ${connected}`
+    );
+    console.log(
+      `🏦 address: ${address}`
+    );
+    console.log(
+      `🧐 isOwner: ${isOwner}`
+    );
+  }, [address, connected, isOwner]);
 
   return (
     <>
