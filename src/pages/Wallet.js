@@ -14,8 +14,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-import logo from "../images/devdao.svg";
-
 function Wallet({ address }) {
   const [ticket, setTicket] =
     useState(null);
@@ -93,12 +91,6 @@ function Wallet({ address }) {
         padding="0 16px"
         width="100%"
       >
-        <Image
-          src={logo}
-          alt="DevDAO logo"
-          margin="0 auto 36px"
-          width="25%"
-        />
         <Heading mb={4}>
           Your ticket
         </Heading>

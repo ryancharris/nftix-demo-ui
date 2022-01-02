@@ -1,4 +1,8 @@
-import { Container, Flex, VStack } from "@chakra-ui/react";
+import {
+  Container,
+  Flex,
+  VStack,
+} from "@chakra-ui/react";
 
 function Page({ children }) {
   return (
@@ -28,7 +32,10 @@ function Page({ children }) {
         margin="12px 12px"
         position="relative"
       >
-        <VStack w="100%" flex="1 1 auto">
+        <VStack
+          w="100%"
+          flex="1 1 auto"
+        >
           {children}
         </VStack>
       </Container>

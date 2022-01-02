@@ -10,11 +10,8 @@ import {
   Heading,
   Text,
   Flex,
-  Image,
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
-
-import logo from "../images/devdao.svg";
 
 function Buy({ connectedContract }) {
   const toast = useToast();
@@ -119,12 +116,6 @@ function Buy({ connectedContract }) {
         padding="0 16px"
         textAlign="center"
       >
-        <Image
-          src={logo}
-          alt="DevDAO logo"
-          margin="0 auto 36px"
-          width="25%"
-        />
         <Heading mb={4}>
           DevDAO Conference 2022
         </Heading>

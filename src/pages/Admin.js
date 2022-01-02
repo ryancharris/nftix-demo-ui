@@ -3,17 +3,11 @@ import {
   Box,
   Button,
   Flex,
-  Image,
   Heading,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
-import { ethers } from "ethers";
-
-import nfTixBooth from "../contracts/nfTixBooth.json";
-
-import logo from "../images/devdao.svg";
 
 function Admin({
   connectedContract,
@@ -31,21 +25,7 @@ function Admin({
 
   const closeSale = async () => {
     try {
-      const { ethereum } = window;
-      if (!ethereum) return;
-
-      const provider =
-        new ethers.providers.Web3Provider(
-          ethereum
-        );
-      const signer =
-        provider.getSigner();
-      const connectedContract =
-        new ethers.Contract(
-          process.env.REACT_APP_CONTRACT_ID,
-          nfTixBooth.abi,
-          signer
-        );
+      if (!connectedContract) return;
 
       setCloseTxnPending(true);
       let closeSaleTxn =
@@ -86,21 +66,7 @@ function Admin({
 
   const openSale = async () => {
     try {
-      const { ethereum } = window;
-      if (!ethereum) return;
-
-      const provider =
-        new ethers.providers.Web3Provider(
-          ethereum
-        );
-      const signer =
-        provider.getSigner();
-      const connectedContract =
-        new ethers.Contract(
-          process.env.REACT_APP_CONTRACT_ID,
-          nfTixBooth.abi,
-          signer
-        );
+      if (!connectedContract) return;
 
       setOpenTxnPending(true);
       let openSaleTxn =
@@ -149,12 +115,6 @@ function Admin({
         padding="0 16px"
         width="100%"
       >
-        <Image
-          src={logo}
-          alt="DevDAO logo"
-          margin="0 auto 36px"
-          width="25%"
-        />
         <Heading mb={4}>
           Admin panel
         </Heading>

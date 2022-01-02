@@ -10,6 +10,7 @@ import {
 import { ethers } from "ethers";
 
 import nfTixBooth from "./contracts/nfTixBooth.json";
+import logo from "./images/devdao.svg";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEthereum } from "@fortawesome/free-brands-svg-icons";
@@ -23,6 +24,7 @@ import Connect from "./components/Connect";
 import {
   Button,
   Flex,
+  Image,
   Menu,
   MenuButton,
   MenuList,
@@ -275,6 +277,12 @@ function App() {
             </>
           )}
         </Menu>
+        <Image
+          src={logo}
+          alt="DevDAO logo"
+          margin="0 auto 36px"
+          width="25%"
+        />
         <Flex
           alignItems="flex-start"
           flex="1 1 auto"

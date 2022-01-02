@@ -9,12 +9,9 @@ import {
   Heading,
   Text,
   VStack,
-  Image,
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import QrReader from "react-qr-scanner";
-
-import logo from "../images/devdao.svg";
 
 function CheckIn({
   connectedContract,
@@ -115,12 +112,6 @@ function CheckIn({
         padding="0 16px"
         width="100%"
       >
-        <Image
-          src={logo}
-          alt="DevDAO logo"
-          margin="0 auto 36px"
-          width="25%"
-        />
         <Heading mb={4}>
           Check In
         </Heading>
@@ -200,9 +191,9 @@ function CheckIn({
         {showScanner && (
           <>
             <Box
-              margin="16px 0 8px 0"
+              margin="16px auto 8px auto"
               padding="0 16px"
-              width="100%"
+              width="420px"
             >
               <QrReader
                 delay={3000}
