@@ -3,10 +3,8 @@ import {
   useState,
 } from "react";
 import {
-  Box,
   Button,
   ButtonGroup,
-  VStack,
   Heading,
   Text,
   Flex,
@@ -80,7 +78,7 @@ function Buy({ connectedContract }) {
           <a
             href={`https://rinkeby.etherscan.io/tx/${buyTxn.hash}`}
             target="_blank"
-            rel="nofollow noopener"
+            rel="nofollow noreferrer"
           >
             Checkout the transaction on
             Etherscan

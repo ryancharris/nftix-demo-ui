@@ -11,7 +11,6 @@ import {
   Heading,
   Link,
   Text,
-  VStack,
 } from "@chakra-ui/react";
 
 function Wallet({ address }) {

@@ -54,8 +54,6 @@ function App() {
     connectedContract
   );
 
-  const [connected, setConnected] =
-    useState(false);
   const [address, setAddress] =
     useState(null);
   const [isOwner, setIsOwner] =
@@ -64,15 +62,12 @@ function App() {
   useEffect(() => {
     // Debug logs
     console.log(
-      `🔌 connected: ${connected}`
-    );
-    console.log(
       `🏦 address: ${address}`
     );
     console.log(
       `🧐 isOwner: ${isOwner}`
     );
-  }, [address, connected, isOwner]);
+  }, [address, isOwner]);
 
   useEffect(() => {
     if (!address) {

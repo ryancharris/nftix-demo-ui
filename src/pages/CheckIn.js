@@ -8,7 +8,6 @@ import {
   Flex,
   Heading,
   Text,
-  VStack,
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import QrReader from "react-qr-scanner";
@@ -77,7 +76,7 @@ function CheckIn({
           <a
             href={`https://rinkeby.etherscan.io/tx/${checkInTxn.hash}`}
             target="_blank"
-            rel="nofollow noopener"
+            rel="nofollow noreferrer"
           >
             Checkout the transaction on
             Etherscan

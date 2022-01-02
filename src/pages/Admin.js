@@ -1,11 +1,9 @@
 import { useState } from "react";
 import {
-  Box,
   Button,
   Flex,
   Heading,
   Text,
-  VStack,
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 
@@ -40,7 +38,7 @@ function Admin({
           <a
             href={`https://rinkeby.etherscan.io/tx/${closeSaleTxn.hash}`}
             target="_blank"
-            rel="nofollow noopener"
+            rel="nofollow noreferrer"
           >
             Checkout the transaction on
             Etherscan
@@ -81,7 +79,7 @@ function Admin({
           <a
             href={`https://rinkeby.etherscan.io/tx/${openSaleTxn.hash}`}
             target="_blank"
-            rel="nofollow noopener"
+            rel="nofollow noreferrer"
           >
             Checkout the transaction on
             Etherscan
