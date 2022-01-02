@@ -106,54 +106,43 @@ function Buy({ connectedContract }) {
   };
 
   return (
-    <VStack
-      width="100%"
-      padding="24px 12px"
-    >
-      <Box
-        margin="56px 0 8px 0"
-        width="100%"
-        padding="0 16px"
-        textAlign="center"
+    <>
+      <Heading mb={4}>
+        DevDAO Conference 2022
+      </Heading>
+      <Text fontSize="xl" mb={4}>
+        Connect your wallet to mint your
+        NFT. It'll be your ticket to get
+        in!
+      </Text>
+      <Flex
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        margin="0 auto"
+        maxW="140px"
       >
-        <Heading mb={4}>
-          DevDAO Conference 2022
-        </Heading>
-        <Text fontSize="xl" mb={4}>
-          Connect your wallet to mint
-          your NFT. It'll be your ticket
-          to get in!
-        </Text>
-        <Flex
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          margin="0 auto"
-          maxW="140px"
-        >
-          <ButtonGroup mb={4}>
-            <Button
-              onClick={buyTicket}
-              isLoading={buyTxnPending}
-              loadingText="Pending"
-              size="lg"
-              colorScheme="teal"
-            >
-              Buy Ticket
-            </Button>
-          </ButtonGroup>
+        <ButtonGroup mb={4}>
+          <Button
+            onClick={buyTicket}
+            isLoading={buyTxnPending}
+            loadingText="Pending"
+            size="lg"
+            colorScheme="teal"
+          >
+            Buy Ticket
+          </Button>
+        </ButtonGroup>
 
-          {availableTicketCount &&
-            totalTicketCount && (
-              <Text>
-                {availableTicketCount}{" "}
-                of {totalTicketCount}{" "}
-                minted
-              </Text>
-            )}
-        </Flex>
-      </Box>
-    </VStack>
+        {availableTicketCount &&
+          totalTicketCount && (
+            <Text>
+              {availableTicketCount} of{" "}
+              {totalTicketCount} minted
+            </Text>
+          )}
+      </Flex>
+    </>
   );
 }
 

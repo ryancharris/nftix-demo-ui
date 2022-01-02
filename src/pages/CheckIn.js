@@ -103,163 +103,145 @@ function CheckIn({
   };
 
   return (
-    <VStack
-      width="100%"
-      padding="24px 12px"
-    >
-      <Box
-        margin="56px 0 8px 0"
-        padding="0 16px"
-        width="100%"
-      >
-        <Heading mb={4}>
-          Check In
-        </Heading>
+    <>
+      <Heading mb={4}>Check In</Heading>
 
-        {!showScanner &&
-          scannedAddress &&
-          addressHasTicket && (
-            <>
-              <Text
-                fontSize="xl"
-                mb={8}
-              >
-                This wallet owns a
-                ticket to the
-                conference!
-              </Text>
-              <Flex
-                width="100%"
-                justifyContent="center"
-              >
-                <Button
-                  onClick={checkIn}
-                  isLoading={
-                    checkInTxnPending
-                  }
-                  size="lg"
-                  colorScheme="teal"
-                >
-                  Check In
-                </Button>
-              </Flex>
-            </>
-          )}
-
-        {!showScanner && (
+      {!showScanner &&
+        scannedAddress &&
+        addressHasTicket && (
           <>
-            {!scannedAddress && (
-              <Text
-                fontSize="xl"
-                mb={8}
+            <Text fontSize="xl" mb={8}>
+              This wallet owns a ticket
+              to the conference!
+            </Text>
+            <Flex
+              width="100%"
+              justifyContent="center"
+            >
+              <Button
+                onClick={checkIn}
+                isLoading={
+                  checkInTxnPending
+                }
+                size="lg"
+                colorScheme="teal"
               >
-                Scan wallet address to
-                verify ticket ownership
-                and check-in.
-              </Text>
-            )}
-            {scannedAddress &&
-              !addressHasTicket && (
-                <Text
-                  fontSize="xl"
-                  mb={8}
-                >
-                  This wallet does not
-                  own a ticket. Please
-                  try again.
-                </Text>
-              )}
-            {!addressHasTicket && (
-              <Flex
-                width="100%"
-                justifyContent="center"
-              >
-                <Button
-                  onClick={() =>
-                    setShowScanner(true)
-                  }
-                  size="lg"
-                  colorScheme="teal"
-                >
-                  Scan QR
-                </Button>
-              </Flex>
-            )}
+                Check In
+              </Button>
+            </Flex>
           </>
         )}
 
-        {showScanner && (
-          <>
-            <Box
-              margin="16px auto 8px auto"
-              padding="0 16px"
-              width="420px"
-            >
-              <QrReader
-                delay={3000}
-                style={{
-                  maxWidth: "100%",
-                  margin: "0 auto",
-                }}
-                onError={(err) => {
-                  console.log(err);
-                  setShowScanner(false);
-                  toast({
-                    title: "Failure",
-                    description: err,
-                    status: "error",
-                    duration: 5000,
-                    isClosable: true,
-                    variant: "subtle",
-                  });
-                }}
-                onScan={(data) => {
-                  if (!data) return;
-
-                  const address =
-                    data.text.split(
-                      "ethereum:"
-                    );
-                  setScannedAddress(
-                    address[1]
-                  );
-                  setShowScanner(false);
-                  toast({
-                    title:
-                      "Captured address!",
-                    description: `${address[1].slice(
-                      0,
-                      6
-                    )}
-                    ...${address[1].slice(
-                      -4
-                    )}`,
-                    status: "success",
-                    duration: 5000,
-                    isClosable: true,
-                    variant: "subtle",
-                  });
-                }}
-              />
-            </Box>
+      {!showScanner && (
+        <>
+          {!scannedAddress && (
+            <Text fontSize="xl" mb={8}>
+              Scan wallet address to
+              verify ticket ownership
+              and check-in.
+            </Text>
+          )}
+          {scannedAddress &&
+            !addressHasTicket && (
+              <Text
+                fontSize="xl"
+                mb={8}
+              >
+                This wallet does not own
+                a ticket. Please try
+                again.
+              </Text>
+            )}
+          {!addressHasTicket && (
             <Flex
               width="100%"
               justifyContent="center"
             >
               <Button
                 onClick={() =>
-                  setShowScanner(false)
+                  setShowScanner(true)
                 }
                 size="lg"
-                colorScheme="red"
+                colorScheme="teal"
               >
-                Cancel
+                Scan QR
               </Button>
             </Flex>
-          </>
-        )}
-      </Box>
-    </VStack>
+          )}
+        </>
+      )}
+
+      {showScanner && (
+        <>
+          <Box
+            margin="16px auto 8px auto"
+            padding="0 16px"
+            width="420px"
+          >
+            <QrReader
+              delay={3000}
+              style={{
+                maxWidth: "100%",
+                margin: "0 auto",
+              }}
+              onError={(err) => {
+                console.log(err);
+                setShowScanner(false);
+                toast({
+                  title: "Failure",
+                  description: err,
+                  status: "error",
+                  duration: 5000,
+                  isClosable: true,
+                  variant: "subtle",
+                });
+              }}
+              onScan={(data) => {
+                if (!data) return;
+
+                const address =
+                  data.text.split(
+                    "ethereum:"
+                  );
+                setScannedAddress(
+                  address[1]
+                );
+                setShowScanner(false);
+                toast({
+                  title:
+                    "Captured address!",
+                  description: `${address[1].slice(
+                    0,
+                    6
+                  )}
+                    ...${address[1].slice(
+                      -4
+                    )}`,
+                  status: "success",
+                  duration: 5000,
+                  isClosable: true,
+                  variant: "subtle",
+                });
+              }}
+            />
+          </Box>
+          <Flex
+            width="100%"
+            justifyContent="center"
+          >
+            <Button
+              onClick={() =>
+                setShowScanner(false)
+              }
+              size="lg"
+              colorScheme="red"
+            >
+              Cancel
+            </Button>
+          </Flex>
+        </>
+      )}
+    </>
   );
 }
 

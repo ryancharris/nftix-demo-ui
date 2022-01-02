@@ -82,48 +82,38 @@ function Wallet({ address }) {
   };
 
   return (
-    <VStack
-      width="100%"
-      padding="24px 12px"
-    >
-      <Box
-        margin="56px 0 16px 0"
-        padding="0 16px"
-        width="100%"
+    <>
+      <Heading mb={4}>
+        Your ticket
+      </Heading>
+      <Flex
+        justifyContent="center"
+        mb={8}
       >
-        <Heading mb={4}>
-          Your ticket
-        </Heading>
-        <Flex
-          justifyContent="center"
-          mb={8}
-        >
-          {loadingTicket && (
-            <CircularProgress
-              capIsRound
-              isIndeterminate
-              color="green.300"
-              size="120px"
-            />
-          )}
+        {loadingTicket && (
+          <CircularProgress
+            capIsRound
+            isIndeterminate
+            color="green.300"
+            size="120px"
+          />
+        )}
 
-          {!loadingTicket &&
-            ticket &&
-            createTicketDisplay()}
+        {!loadingTicket &&
+          ticket &&
+          createTicketDisplay()}
 
-          {!loadingTicket && !ticket && (
-            <Text
-              fontSize="xl"
-              mb={2}
-              width="100%"
-            >
-              You don't own any tickets
-              😢
-            </Text>
-          )}
-        </Flex>
-      </Box>
-    </VStack>
+        {!loadingTicket && !ticket && (
+          <Text
+            fontSize="xl"
+            mb={2}
+            width="100%"
+          >
+            You don't own any tickets 😢
+          </Text>
+        )}
+      </Flex>
+    </>
   );
 }
 

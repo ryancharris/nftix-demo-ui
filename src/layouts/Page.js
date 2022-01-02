@@ -1,4 +1,5 @@
 import {
+  Box,
   Container,
   Flex,
   VStack,
@@ -36,7 +37,18 @@ function Page({ children }) {
           w="100%"
           flex="1 1 auto"
         >
-          {children}
+          <VStack
+            width="100%"
+            padding="24px 12px"
+          >
+            <Box
+              margin="0 0 16px 0"
+              padding="0 16px"
+              width="100%"
+            >
+              {children}
+            </Box>
+          </VStack>
         </VStack>
       </Container>
     </Flex>

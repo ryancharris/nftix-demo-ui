@@ -277,18 +277,19 @@ function App() {
             </>
           )}
         </Menu>
-        <Image
-          src={logo}
-          alt="DevDAO logo"
-          margin="0 auto 36px"
-          width="25%"
-        />
         <Flex
           alignItems="flex-start"
           flex="1 1 auto"
+          flexDirection="column"
           justifyContent="center"
           width="100%"
         >
+          <Image
+            src={logo}
+            alt="DevDAO logo"
+            margin="36px auto 12px"
+            width="15%"
+          />
           <Routes>
             <Route
               path="/"
