@@ -22,6 +22,7 @@ function Page({ children }) {
       minH="100vh"
       justify="center"
       position="relative"
+      padding="0 12px"
     >
       <Container
         maxW="container.sm"
