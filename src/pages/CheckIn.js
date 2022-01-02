@@ -175,7 +175,7 @@ function CheckIn({
           <Box
             margin="16px auto 8px auto"
             padding="0 16px"
-            width="420px"
+            width="360px"
           >
             <QrReader
               delay={3000}
