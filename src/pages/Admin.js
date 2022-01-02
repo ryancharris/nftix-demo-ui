@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -7,10 +8,137 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
+import { ethers } from "ethers";
+
+import nfTixBooth from "../contracts/nfTixBooth.json";
 
 import logo from "../images/devdao.svg";
 
-function Admin() {
+function Admin({
+  connectedContract,
+  isOwner,
+}) {
+  const toast = useToast();
+  const [
+    openTxnPending,
+    setOpenTxnPending,
+  ] = useState(false);
+  const [
+    closeTxnPending,
+    setCloseTxnPending,
+  ] = useState(false);
+
+  const closeSale = async () => {
+    try {
+      const { ethereum } = window;
+      if (!ethereum) return;
+
+      const provider =
+        new ethers.providers.Web3Provider(
+          ethereum
+        );
+      const signer =
+        provider.getSigner();
+      const connectedContract =
+        new ethers.Contract(
+          process.env.REACT_APP_CONTRACT_ID,
+          nfTixBooth.abi,
+          signer
+        );
+
+      setCloseTxnPending(true);
+      let closeSaleTxn =
+        await connectedContract.closeSale();
+
+      await closeSaleTxn.wait();
+      setCloseTxnPending(false);
+
+      toast({
+        title: "Sale is open!",
+        description: (
+          <a
+            href={`https://rinkeby.etherscan.io/tx/${closeSaleTxn.hash}`}
+            target="_blank"
+            rel="nofollow noopener"
+          >
+            Checkout the transaction on
+            Etherscan
+          </a>
+        ),
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        variant: "subtle",
+      });
+    } catch (err) {
+      setCloseTxnPending(false);
+      toast({
+        title: "Failure",
+        description: err,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        variant: "subtle",
+      });
+    }
+  };
+
+  const openSale = async () => {
+    try {
+      const { ethereum } = window;
+      if (!ethereum) return;
+
+      const provider =
+        new ethers.providers.Web3Provider(
+          ethereum
+        );
+      const signer =
+        provider.getSigner();
+      const connectedContract =
+        new ethers.Contract(
+          process.env.REACT_APP_CONTRACT_ID,
+          nfTixBooth.abi,
+          signer
+        );
+
+      setOpenTxnPending(true);
+      let openSaleTxn =
+        await connectedContract.openSale();
+
+      await openSaleTxn.wait();
+      setOpenTxnPending(false);
+
+      toast({
+        title: "Sale is open!",
+        description: (
+          <a
+            href={`https://rinkeby.etherscan.io/tx/${openSaleTxn.hash}`}
+            target="_blank"
+            rel="nofollow noopener"
+          >
+            Checkout the transaction on
+            Etherscan
+          </a>
+        ),
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        variant: "subtle",
+      });
+    } catch (err) {
+      setOpenTxnPending(false);
+      toast({
+        title: "Failure",
+        description: err,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        variant: "subtle",
+      });
+    }
+  };
+
   return (
     <VStack
       width="100%"
@@ -39,6 +167,12 @@ function Admin() {
           justifyContent="center"
         >
           <Button
+            isDisabled={
+              !isOwner ||
+              closeTxnPending
+            }
+            isLoading={openTxnPending}
+            onClick={openSale}
             loadingText="Pending"
             size="lg"
             colorScheme="teal"
@@ -46,6 +180,11 @@ function Admin() {
             Open Sale
           </Button>
           <Button
+            isDisabled={
+              !isOwner || openTxnPending
+            }
+            isLoading={closeTxnPending}
+            onClick={closeSale}
             loadingText="Pending"
             size="lg"
             colorScheme="red"

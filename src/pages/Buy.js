@@ -1,25 +1,112 @@
-import { useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
 import {
   Box,
   Button,
   ButtonGroup,
   VStack,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
   Heading,
   Text,
   Flex,
   Image,
 } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 
 import logo from "../images/devdao.svg";
 
-function Buy() {
-  const [mintCount, setMintCount] =
-    useState(1);
+function Buy({ connectedContract }) {
+  const toast = useToast();
+  const [
+    buyTxnPending,
+    setBuyTxnPending,
+  ] = useState(false);
+  const [
+    totalTicketCount,
+    setTotalTicketCount,
+  ] = useState(null);
+  const [
+    availableTicketCount,
+    setAvailableTicketCount,
+  ] = useState(null);
+
+  useEffect(() => {
+    if (!connectedContract) return;
+
+    getAvailableTicketCount();
+    getTotalTicketCount();
+  });
+
+  const getAvailableTicketCount =
+    async () => {
+      try {
+        const count =
+          await connectedContract.availableTicketCount();
+        setAvailableTicketCount(
+          count.toNumber()
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+  const getTotalTicketCount =
+    async () => {
+      try {
+        const count =
+          await connectedContract.totalTicketCount();
+        setTotalTicketCount(
+          count.toNumber()
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+  const buyTicket = async () => {
+    try {
+      if (!connectedContract) return;
+
+      setBuyTxnPending(true);
+      const buyTxn =
+        await connectedContract.mint({
+          value: `${0.08 * 10 ** 18}`,
+        });
+
+      await buyTxn.wait();
+      setBuyTxnPending(false);
+
+      toast({
+        title: "Success!",
+        description: (
+          <a
+            href={`https://rinkeby.etherscan.io/tx/${buyTxn.hash}`}
+            target="_blank"
+            rel="nofollow noopener"
+          >
+            Checkout the transaction on
+            Etherscan
+          </a>
+        ),
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        variant: "subtle",
+      });
+    } catch (err) {
+      console.log(err);
+      setBuyTxnPending(false);
+      toast({
+        title: "Failed.",
+        description: err,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        variant: "subtle",
+      });
+    }
+  };
 
   return (
     <VStack
@@ -53,35 +140,26 @@ function Buy() {
           margin="0 auto"
           maxW="140px"
         >
-          <NumberInput
-            size="lg"
-            defaultValue={1}
-            min={1}
-            max={3}
-            mb={4}
-            onChange={(value) => {
-              setMintCount(
-                parseInt(value)
-              );
-            }}
-          >
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
           <ButtonGroup mb={4}>
             <Button
+              onClick={buyTicket}
+              isLoading={buyTxnPending}
               loadingText="Pending"
               size="lg"
               colorScheme="teal"
             >
-              {mintCount > 1
-                ? "Buy Tickets"
-                : "Buy Ticket"}
+              Buy Ticket
             </Button>
           </ButtonGroup>
+
+          {availableTicketCount &&
+            totalTicketCount && (
+              <Text>
+                {availableTicketCount}{" "}
+                of {totalTicketCount}{" "}
+                minted
+              </Text>
+            )}
         </Flex>
       </Box>
     </VStack>

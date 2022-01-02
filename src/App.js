@@ -7,6 +7,9 @@ import {
   Routes,
   useNavigate,
 } from "react-router-dom";
+import { ethers } from "ethers";
+
+import nfTixBooth from "./contracts/nfTixBooth.json";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEthereum } from "@fortawesome/free-brands-svg-icons";
@@ -40,6 +43,14 @@ import Wallet from "./pages/Wallet";
 
 function App() {
   const navigate = useNavigate();
+  const [
+    connectedContract,
+    setConnectedContract,
+  ] = useState(null);
+  console.log(
+    "📄 connectedContract:",
+    connectedContract
+  );
 
   const [connected, setConnected] =
     useState(false);
@@ -61,9 +72,99 @@ function App() {
     );
   }, [address, connected, isOwner]);
 
+  useEffect(() => {
+    if (!address) {
+      const previousAddress =
+        window.localStorage.getItem(
+          "nftix-address"
+        );
+
+      if (previousAddress) {
+        setAddress(previousAddress);
+      }
+    }
+  }, [address]);
+
+  const getConnectedContract =
+    async () => {
+      const { ethereum } = window;
+      if (!ethereum) {
+        return;
+      } else if (
+        !process.env
+          .REACT_APP_CONTRACT_ID
+      ) {
+        console.log(
+          "Set'process.env.REACT_APP_CONTRACT_ID'"
+        );
+      }
+
+      const provider =
+        new ethers.providers.Web3Provider(
+          ethereum
+        );
+      const signer =
+        provider.getSigner();
+      const connectedContract =
+        new ethers.Contract(
+          process.env.REACT_APP_CONTRACT_ID,
+          nfTixBooth.abi,
+          signer
+        );
+      setConnectedContract(
+        connectedContract
+      );
+    };
+
+  useEffect(() => {
+    getConnectedContract();
+  }, []);
+
+  const checkIsContractOwner =
+    async () => {
+      if (
+        !connectedContract ||
+        !address
+      )
+        return;
+
+      const ownerAddress =
+        await connectedContract.owner();
+
+      if (
+        address.toLowerCase() ===
+        ownerAddress.toLowerCase()
+      ) {
+        setIsOwner(true);
+      } else {
+        setIsOwner(false);
+      }
+    };
+
+  useEffect(() => {
+    checkIsContractOwner();
+  }, [address]);
+
   return (
     <>
-      <Connect />
+      <Connect
+        address={address}
+        onConnect={(address) => {
+          if (!address) return;
+
+          setAddress(address);
+          window.localStorage.setItem(
+            "nftix-address",
+            address
+          );
+        }}
+        onDisconnect={() => {
+          setAddress(null);
+          window.localStorage.removeItem(
+            "nftix-address"
+          );
+        }}
+      />
       <Page>
         <Menu
           left="0"
@@ -130,6 +231,7 @@ function App() {
                 </MenuItem>
                 <MenuDivider />
                 <MenuItem
+                  isDisabled={!isOwner}
                   onClick={() =>
                     navigate(
                       "/check-in"
@@ -151,6 +253,7 @@ function App() {
                 </MenuItem>
                 <MenuDivider />
                 <MenuItem
+                  isDisabled={!isOwner}
                   onClick={() =>
                     navigate("/admin")
                   }
@@ -181,22 +284,45 @@ function App() {
           <Routes>
             <Route
               path="/"
-              element={<Buy />}
+              element={
+                <Buy
+                  connectedContract={
+                    connectedContract
+                  }
+                />
+              }
             />
 
             <Route
               path="/check-in"
-              element={<CheckIn />}
+              element={
+                <CheckIn
+                  connectedContract={
+                    connectedContract
+                  }
+                />
+              }
             />
 
             <Route
               path="/admin"
-              element={<Admin />}
+              element={
+                <Admin
+                  connectedContract={
+                    connectedContract
+                  }
+                  isOwner={isOwner}
+                />
+              }
             />
 
             <Route
               path="/wallet"
-              element={<Wallet />}
+              element={
+                <Wallet
+                  address={address}
+                />
+              }
             />
           </Routes>
         </Flex>
