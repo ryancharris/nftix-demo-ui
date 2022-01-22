@@ -1,8 +1,13 @@
 import {
+  useEffect,
+  useState,
+} from "react";
+import {
   Route,
   Routes,
   useNavigate,
 } from "react-router-dom";
+import { ethers } from "ethers";
 
 import logo from "./images/devdao.svg";
 
@@ -37,12 +42,111 @@ import CheckIn from "./pages/CheckIn";
 import Page from "./layouts/Page";
 import Wallet from "./pages/Wallet";
 
+import nfTixBooth from "./contracts/nfTixBooth.json";
+
 function App() {
   const navigate = useNavigate();
 
+  const [address, setAddress] =
+    useState(null);
+  console.log("address:", address);
+
+  const [isOwner, setIsOwner] =
+    useState(false);
+  console.log("isOwner", isOwner);
+
+  const [
+    connectedContract,
+    setConnectedContract,
+  ] = useState(null);
+  console.log(
+    "connectedContract",
+    connectedContract
+  );
+
+  useEffect(() => {
+    const checkIsContractOwner =
+      async () => {
+        if (
+          !address ||
+          !connectedContract
+        )
+          return;
+
+        const ownerAddress =
+          await connectedContract.owner();
+
+        if (
+          address.toLowerCase() ===
+          ownerAddress.toLowerCase()
+        ) {
+          setIsOwner(true);
+        } else {
+          setIsOwner(false);
+        }
+      };
+    checkIsContractOwner();
+  }, [address, connectedContract]);
+
+  useEffect(() => {
+    if (!address) {
+      const previousAddress =
+        window.localStorage.getItem(
+          "nftix-address"
+        );
+
+      if (previousAddress) {
+        setAddress(previousAddress);
+      }
+    }
+  }, [address]);
+
+  const getConnectedContract =
+    async () => {
+      const { ethereum } = window;
+      if (!ethereum) return;
+
+      const provider =
+        new ethers.providers.Web3Provider(
+          ethereum
+        );
+      const signer =
+        provider.getSigner();
+      const connectedContract =
+        new ethers.Contract(
+          process.env.REACT_APP_CONTRACT_ID,
+          nfTixBooth.abi,
+          signer
+        );
+      setConnectedContract(
+        connectedContract
+      );
+    };
+
+  useEffect(() => {
+    getConnectedContract();
+  }, []);
+
   return (
     <>
-      <Connect />
+      <Connect
+        address={address}
+        onConnect={(address) => {
+          setAddress(address);
+
+          window.localStorage.setItem(
+            "nftix-address",
+            address
+          );
+        }}
+        onDisconnect={() => {
+          setAddress(null);
+
+          window.localStorage.removeItem(
+            "nftix-address"
+          );
+        }}
+      />
       <Page>
         <Menu
           left="0"
@@ -90,6 +194,7 @@ function App() {
                 </MenuItem>
                 <MenuDivider />
                 <MenuItem
+                  isDisabled={!address}
                   onClick={() =>
                     navigate("/wallet")
                   }
@@ -109,6 +214,7 @@ function App() {
                 </MenuItem>
                 <MenuDivider />
                 <MenuItem
+                  isDisabled={!isOwner}
                   onClick={() =>
                     navigate(
                       "/check-in"
@@ -130,6 +236,7 @@ function App() {
                 </MenuItem>
                 <MenuDivider />
                 <MenuItem
+                  isDisabled={!isOwner}
                   onClick={() =>
                     navigate("/admin")
                   }
@@ -167,22 +274,45 @@ function App() {
           <Routes>
             <Route
               path="/"
-              element={<Buy />}
+              element={
+                <Buy
+                  connectedContract={
+                    connectedContract
+                  }
+                />
+              }
             />
 
             <Route
               path="/check-in"
-              element={<CheckIn />}
+              element={
+                <CheckIn
+                  connectedContract={
+                    connectedContract
+                  }
+                />
+              }
             />
 
             <Route
               path="/admin"
-              element={<Admin />}
+              element={
+                <Admin
+                  isOwner={isOwner}
+                  connectedContract={
+                    connectedContract
+                  }
+                />
+              }
             />
 
             <Route
               path="/wallet"
-              element={<Wallet />}
+              element={
+                <Wallet
+                  address={address}
+                />
+              }
             />
           </Routes>
         </Flex>
