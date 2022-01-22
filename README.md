@@ -2,7 +2,7 @@
 
 This repository contains the UI used for my Egghead course on building a NFT ticketing system 🥚 🤓
 
-If you're watching the videos, use the `main` branch to follow along.
+If you're watching the videos, use the `main` branch to follow along. To see the final results, checkout the `final` branch.
 
 ## Get started
 
