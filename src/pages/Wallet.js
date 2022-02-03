@@ -99,7 +99,7 @@ function Wallet({ address }) {
             size="120px"
           />
         )}
-        {!loadingTicket &&
+        {!loadingTicket && ticket &&
           createTicketDisplay()}
         {!loadingTicket && !ticket && (
           <Text
